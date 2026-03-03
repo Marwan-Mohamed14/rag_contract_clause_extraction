@@ -1,5 +1,5 @@
 """
-Egyptian Legal Contract RAG System v4.5
+Egyptian Legal Contract RAG System v4.7
 ========================================
 FIXES over v4.1:
 
@@ -232,6 +232,63 @@ CONTENT_FILTERS = {
         "employer shall pay the worker",
         "employment contract",
     ],
+    # intellectual_property: block articles that appear because they mention
+    # "rights", "author", or "work" but are about industrial design registration,
+    # WTO membership scope, copyright duration, or compulsory licensing —
+    # none of which are relevant to IP ownership clauses in software contracts.
+    # Blocked in v4.6
+    "intellectual_property": [
+        # Industrial design registration articles
+        "trade registry department",
+        "industrial design",
+        "register an industrial design",
+        "registration application was filed",
+        "national or an international exhibition",
+        # WTO membership scope articles
+        "world trade organization",
+        "wto member",
+        "member countries of the world trade organization",
+        "accords reciprocity to egypt",
+        "nationals of member states comprise",
+        # Copyright duration articles (Art 160-162)
+        "50 years from the death",
+        "economic rights relating to works of joint authorship",
+        "50 years from the date on which the work was published",
+        "lives of all co-authors",
+        # Compulsory licensing articles
+        "reproduction or translation, or both",
+        "without the authorization of the author and for the purposes",
+        "equitable remuneration to the author or his successor",
+        # Broadcasting/database jurisdiction articles
+        "broadcasting organisations",
+        "ministry of communication and information shall be competent",
+        "computer programs and databases",
+        # Translation rights lapse
+        "translation of that work into the arabic language",
+        # Commercial law installment sales (blocked in v4.7)
+        # Appear because they mention "transfer", "permission", "disposition"
+        "price had not been fully paid",
+        "demand the immediate payment of all remaining installments",
+        "buyer shall be penalized for violating",
+        "imprisonment for a period not exceeding six months",
+        "disposition made in violation of this provision",
+        "buyer's disposition of the goods",
+        # Company law foreign worker quota articles (blocked in v4.7)
+        # Appear because they mention "authorization" and "rights"
+        "employment of foreign workers",
+        "qualified egyptians are not available",
+        "competent minister may authorize",
+        "prescribed percentages",
+        "partnerships limited by shares",
+        "limited liability companies",
+        "single-person companies",
+        # Company law ownership structure articles (blocked in v4.7)
+        "49% egyptian ownership requirement",
+        "restrictions on shares issued",
+        "trading restrictions on subscription certificates",
+        "reoffer them to the public",
+        "in-kind contributions",
+    ],
 }
 
 
@@ -431,10 +488,16 @@ class EgyptianLegalRAG:
                 "electronic signature certification authority egypt valid legally binding",
                 "digital signature law egypt conditions requirements valid"
             ],
+            # v4.6: Rewritten to target author consent and economic rights articles
+            # Art 149 — author owns all economic rights not explicitly signed away
+            # Art 150 — transfer of economic rights requires fair remuneration
+            # Art 147 — author right to prevent third party use without authorization
             "intellectual_property": [
-                "copyright author moral rights ownership work egypt law 82",
-                "intellectual property ownership derivative works modification egypt",
-                "author rights prevent modification distortion work egypt"
+                "author owner economic rights not explicitly signed transferred egypt",
+                "transfer economic rights author remuneration written consent egypt law",
+                "author right prevent third party use work without authorization egypt",
+                "moral rights author attribution integrity work egypt law 82",
+                "assignment copyright requires written agreement authorization egypt",
             ],
             "payment_terms": [
                 "civil law price agreed parties service contract remuneration egypt",
@@ -693,8 +756,8 @@ def get_multiline_input(prompt: str = "") -> str:
 
 def main():
     print("="*80)
-    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.5")
-    print("Content filter v4.4 | Insolvency+DataProtection+CreditorDefault blocked | Software warranty")
+    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.7")
+    print("Content filter v4.4 | v4.7 | CommercialLaw+CompanyLaw noise blocked from IP results")
     print("="*80 + "\n")
 
     DATA_FOLDER = r"C:\Users\Mohamed\Desktop\data"
