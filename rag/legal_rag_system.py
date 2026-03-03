@@ -1,5 +1,5 @@
 """
-Egyptian Legal Contract RAG System v4.3
+Egyptian Legal Contract RAG System v4.5
 ========================================
 FIXES over v4.1:
 
@@ -186,6 +186,44 @@ CONTENT_FILTERS = {
         "rate of 4%", "rate of interest", "judicial demand",
         "delay in commercial matters", "interest accrues",
         "sum of money known in amount",
+        # Construction law (Art 651-654) — blocked in v4.4
+        # These apply ONLY to buildings/architects — NOT to software contracts.
+        # Parties can legitimately agree on any warranty scope in software.
+        # Art 653 ("no exemption for architect/contractor") is construction-specific.
+        # The only universally applicable rules are Civil Law p.49 (gross negligence
+        # and unlawful acts exemptions void) which are retrieved separately.
+        "architect and the contractor shall be jointly liable",
+        "partial collapse of the buildings",
+        "fixed installations they construct",
+        "ten years for any total",
+        "claims arising from the guarantee mentioned above shall lapse",
+        "defects in the buildings or installations",
+        "architect's role was limited to preparing the design",
+        "clause seeking to exempt or limit the liability of the architect",
+        "collapse of the buildings",
+        "ten-year period shall commence",
+        # Insolvency/fraudulent transaction law (Art 237-238) — blocked in v4.5
+        # These appear because they mention "debtor" and "fraud" but are about
+        # creditor protection against insolvent debtors, not warranty/support
+        "debtor's assets or increased his liabilities",
+        "debtor's insolvency",
+        "fraudulent intent by the debtor",
+        "transaction conducted by his debtor",
+        "declared unenforceable against him",
+        # Creditor-default articles (Art 334-336) — blocked in v4.5
+        # About what happens when creditor refuses performance — not warranty law
+        "creditor unjustifiably refuses to accept",
+        "creditor is in default",
+        "interest shall cease to accrue",
+        "deposit the thing at the creditor",
+        # Data Protection Law penalty articles — blocked in v4.5
+        # Penalty fines for legal representatives appear because they mention
+        # "liability" and "obligations" — irrelevant to warranty/support clauses
+        "data protection officer",
+        "two hundred thousand egyptian pounds",
+        "not exceeding two million",
+        "legal representative of a juristic person",
+        "penalized by a fine",
     ],
     "delivery_timeline": [
         "employment contract shall terminate",
@@ -200,7 +238,7 @@ CONTENT_FILTERS = {
 class EgyptianLegalRAG:
     """
     Production-grade RAG for Egyptian legal contract analysis.
-    v4.2: Content filtering added to block lease/employment law noise.
+    v4.4: Construction law (Art 651-654) fully blocked from warranty results.
     """
 
     RELEVANCE_THRESHOLD = 0.68
@@ -410,17 +448,18 @@ class EgyptianLegalRAG:
                 "contractor obligations deadline period implementation completion egypt",
                 "civil law employer rescission contractor non-compliance work period"
             ],
-            # v4.2: Rewritten to target universally applicable articles first.
-            # Art 653 (no exemption) and Civil Law p.49 (no exemption for unlawful acts/
-            # gross negligence) apply to ALL contracts including software.
-            # Art 651 (10-year building guarantee) removed from queries — construction only.
-            # Art 654 (3-year claim window) kept but note it's construction context.
+            # v4.4: Removed ALL construction law queries (Art 651-654, Art 652).
+            # These articles apply to buildings/architects ONLY and should not
+            # appear in software contract analysis at all.
+            # Only universally applicable civil law rules are now retrieved:
+            # - Civil Law p.49: gross negligence exemption void, unlawful acts exemption void
+            # - Art 218-220: compensation requires formal notice, notice channels
+            # These apply to ALL contracts regardless of type.
             "liability_warranty": [
-                "article 653 clause exempt limit liability contractor null void civil law",
-                "article 652 architect liable defects design execution civil law egypt",
                 "civil law exemption liability unlawful acts void gross negligence employed",
-                "article 218 219 compensation due notice debtor formal warning civil law",
-                "article 654 claims guarantee lapse three years discovery defect egypt",
+                "article 218 compensation due notice debtor served civil law egypt",
+                "article 219 notice debtor formal warning any act serving warning post",
+                "article 220 notice debtor not required unlawful act impossible performance",
             ],
             "termination": [
                 "contract termination rescission notice period breach civil law egypt",
@@ -654,8 +693,8 @@ def get_multiline_input(prompt: str = "") -> str:
 
 def main():
     print("="*80)
-    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.3")
-    print("Content filter v4.3 | Partnership+Carrier+Interest blocked | Multilingual embeddings")
+    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.5")
+    print("Content filter v4.4 | Insolvency+DataProtection+CreditorDefault blocked | Software warranty")
     print("="*80 + "\n")
 
     DATA_FOLDER = r"C:\Users\Mohamed\Desktop\data"
