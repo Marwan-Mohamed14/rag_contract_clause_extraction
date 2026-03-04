@@ -1,5 +1,5 @@
 """
-Egyptian Legal Contract RAG System v4.8
+Egyptian Legal Contract RAG System v4.12
 ========================================
 FIXES over v4.1:
 
@@ -130,6 +130,16 @@ TRIGGER_KEYWORDS = {
         "notice of termination", "right to cancel", "end of contract",
         "early termination", "termination for cause", "termination fee",
         "notice period", "termination clause"
+    ],
+    # v4.9: Added representative_liability category
+    # Targets clauses about party liability for acts of representatives,
+    # employees, agents, or subcontractors
+    "representative_liability": [
+        "representatives", "representative", "agents", "agent",
+        "subcontractor", "subcontractors", "employees",
+        "responsible for breach", "liable for acts",
+        "acts of their", "breach by", "conduct of",
+        "vicarious", "liable for their", "responsible for their"
     ]
 }
 
@@ -232,6 +242,91 @@ CONTENT_FILTERS = {
         "employer shall pay the worker",
         "employment contract",
     ],
+    # representative_liability: block noise sources identified from output analysis
+    # Blocked in v4.9 and extended in v4.10
+    "representative_liability": [
+        # Commercial law jurisdiction articles (v4.9)
+        "obligations of that party shall be governed",
+        "provisions of civil law unless otherwise provided by law",
+        "apply only to the obligations of that party",
+        "obligations of the other party shall be governed",
+        # Bill of exchange articles (Art 388-389) — v4.10
+        "bill of exchange",
+        "capacity of a person bound under a bill",
+        "signs a bill of exchange on behalf of another",
+        "formal defect shall not affect the validity",
+        "law of the state whose nationality he holds",
+        # Obligations to perform an act articles (Art 209-211) — v4.10
+        "seek judicial authorization to have the obligation performed",
+        "judgment of the court shall take the place of performance",
+        "debtor is required to preserve a thing",
+        "in cases of urgency the creditor may have the obligation performed",
+        # IT Crimes Law articles (Art 35-36) — v4.10
+        "designated website, account, email, or information system",
+        "fails to report it to the competent authorities",
+        "crimes stipulated in this law are committed in the name",
+        "person responsible for actual management shall be punished",
+        # Public employee / necessity / joint tort articles (Art 167-170) — v4.10
+        "public employee is not liable for damage caused",
+        "acting under an order from a superior",
+        "causes harm to avoid a greater imminent danger",
+        "multiple persons are responsible for causing harm",
+        "jointly liable for compensation",
+        # Transport/carrier employee liability (Commercial Law p.96) — v4.11
+        "total amount of compensation a claimant can receive from the carrier",
+        "limits set forth in article (292)",
+        "carrier and its employees or agents shall not exceed",
+        # Transport carrier responsibility articles (Commercial Law p.80) — v4.11
+        "carrier may not disclaim responsibility for the destruction",
+        "destruction, damage, or delay of the goods during transport",
+        "inherent defects in the goods",
+        # Transport fraud article (Commercial Law Art 216 p.71) — v4.11
+        "fraud in transport matters refers to any action",
+        "carrier is not liable for damages resulting from the delay of transport",
+        "deviation from the agreed route",
+        "providing assistance to a sick, injured, or endangered person",
+        # Carrier employee exemption void article (Commercial Law p.71) — v4.11
+        "any provision that exempts the carrier from liability for the actions of their employees is void",
+        "explosions, fires, derailments, collisions",
+        # Broker liability articles (Commercial Law p.68) — v4.11
+        "broker is liable for compensating any damage caused by the loss or destruction of documents",
+        "broker does not guarantee the success of the contract",
+        # Art 211-213 obligation performance articles — v4.10
+        "exercise due care in the performance of the obligation",
+        "debtor is required to preserve a thing",
+        "debtor is bound to abstain from an act",
+        # Art 236 creditor as representative insolvency — v4.10
+        "creditor is deemed to act as the debtor representative",
+        "failure would cause or increase the debtor insolvency",
+        # Art 204 transfer of ownership obligation — v4.10
+        "obligation to transfer ownership or any other real right",
+        "provisions relating to registration",
+        # Data Protection Law jurisdiction scope — v4.10
+        "provisions of this law shall apply to any person that commits any of the violations",
+        "offender is an egyptian national inside or outside",
+        # Art 713-714 agency termination — v4.10
+        "articles 104 to 107 on representation shall apply",
+        "agency terminates upon completion of the assigned task",
+        "termination of the agency",
+        # Art 662 employer materials delivery fault — v4.10 (keep only subcontractor chunk)
+        "employer was notified to accept delivery of the item",
+        "loss of the materials shall be borne by the employer",
+        # Employment non-compete articles (Civil Law p.170) — v4.11
+        "employer may not invoke such agreement if he terminates",
+        "necessary to protect the employer legitimate interests",
+        # Company law foreign worker quota (Company Law Art 176) — v4.12
+        # Same article already blocked for IP category — now also blocking here
+        "employment of foreign workers",
+        "qualified egyptians are not available",
+        "competent minister may authorize",
+        "prescribed percentages",
+        "partnerships limited by shares",
+        "limited liability companies",
+        "single-person companies",
+        # Commercial agency organization articles (Commercial Law Art 165) — v4.12
+        "laws and regulations specific to the practice of commercial agency in egypt",
+        "organization of commercial agency activities",
+    ],
     # data_privacy: block cross-border data transfer articles (Art 14, 16, 8)
     # These appear in ALL data privacy results because they mention "personal data"
     # and "processing" — but they only apply when the clause specifically involves
@@ -312,6 +407,9 @@ CONTENT_FILTERS = {
         "reoffer them to the public",
         "in-kind contributions",
     ],
+    # representative_liability extra noise blocks added in v4.11
+    # after vectorstore search revealed these score highest but are wrong articles
+    "representative_liability_extra": [],  # placeholder — filters in main list above
 }
 
 
@@ -494,6 +592,7 @@ class EgyptianLegalRAG:
             "delivery_timeline":        0.69,
             "liability_warranty":       0.65,
             "termination":              0.68,
+            "representative_liability": 0.60,
         }
 
         category_queries = {
@@ -550,6 +649,15 @@ class EgyptianLegalRAG:
             "termination": [
                 "contract termination rescission notice period breach civil law egypt",
                 "rescission contract contractor failure compliance period egypt"
+            ],
+            # v4.11: Rewritten to target Article 662 — confirmed present in Civil Law PDF p.162
+            # Art 662 — contractor remains liable to employer for subcontractor work
+            # This is the correct Egyptian law basis for representative liability clauses
+            "representative_liability": [
+                "contractor shall remain liable towards the employer for the subcontractor work",
+                "subcontractors workers engaged contractor right claim directly employer",
+                "article 662 contractor liable subcontractor employer civil law egypt",
+                "party liable breach acts representatives agents subcontractors egypt",
             ]
         }
 
@@ -779,7 +887,7 @@ def get_multiline_input(prompt: str = "") -> str:
 
 def main():
     print("="*80)
-    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.8")
+    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.12")
     print("Content filter v4.4 | v4.7 | CommercialLaw+CompanyLaw noise blocked from IP results")
     print("="*80 + "\n")
 
