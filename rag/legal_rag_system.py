@@ -1,5 +1,5 @@
 """
-Egyptian Legal Contract RAG System v4.7
+Egyptian Legal Contract RAG System v4.8
 ========================================
 FIXES over v4.1:
 
@@ -231,6 +231,29 @@ CONTENT_FILTERS = {
         "termination of the employment",
         "employer shall pay the worker",
         "employment contract",
+    ],
+    # data_privacy: block cross-border data transfer articles (Art 14, 16, 8)
+    # These appear in ALL data privacy results because they mention "personal data"
+    # and "processing" — but they only apply when the clause specifically involves
+    # transferring data outside Egypt. For general data use/consent clauses they
+    # are noise. Blocked in v4.8
+    "data_privacy": [
+        # Cross-border transfer prohibition (Art 14)
+        "transferring or sharing,  or storing of personal data",
+        "to a foreign country",
+        "cross border movement of personal data",
+        "level of protection of personal data",
+        "does not fall below that which is stipulated",
+        # Cross-border access granting (Art 16)
+        "grant access to personal data to another controller or processor outside",
+        "controller or processor outside the arab republic of egypt",
+        "by virtue of a license from the center",
+        # Controller obligations / record keeping (Art 8)
+        "cross border movement",
+        "technical and regulatory procedures for data security",
+        "obtaining a license or permit from the center to handle",
+        "controllers outside of the arab republic of egypt",
+        "appoint a representative in the arab republic of egypt",
     ],
     # intellectual_property: block articles that appear because they mention
     # "rights", "author", or "work" but are about industrial design registration,
@@ -756,7 +779,7 @@ def get_multiline_input(prompt: str = "") -> str:
 
 def main():
     print("="*80)
-    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.7")
+    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.8")
     print("Content filter v4.4 | v4.7 | CommercialLaw+CompanyLaw noise blocked from IP results")
     print("="*80 + "\n")
 
