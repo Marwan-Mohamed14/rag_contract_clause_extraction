@@ -1,5 +1,5 @@
 """
-Egyptian Legal Contract RAG System v4.12
+Egyptian Legal Contract RAG System v4.14
 ========================================
 FIXES over v4.1:
 
@@ -407,6 +407,27 @@ CONTENT_FILTERS = {
         "reoffer them to the public",
         "in-kind contributions",
     ],
+    # general: block noise articles appearing in general similarity search results
+    # These appear because they mention "agreement", "parties", "court", or "invalid"
+    # but are about completely different legal topics. Blocked in v4.12
+    "general": [
+        # Preliminary agreement / earnest money articles (Art 101-103)
+        # Already blocked elsewhere but also appearing in general search
+        "undertakes to conclude a specific contract in the future",
+        "payment of earnest money at contract conclusion",
+        "judgment with res judicata effect shall have the same force",
+        # Arbitration annulment grounds (Arbitration Law p.15)
+        # Appear because they mention "court", "invalid", "void", "agreement"
+        "if there is no arbitration agreement, if it was void, voidable",
+        "fully or partially incapacitated according to the law governing",
+        "unable to present its case as a result of not being given proper notice",
+        "arbitral award failed to apply the law agreed upon by the parties",
+        "composition of the arbitral tribunal or the appointment of the arbitrators",
+        "arbitral award dealt with matters not falling within the scope",
+        "court adjudicating the action for annulment shall ipso jure",
+        "nullity affects exclusively the latter parts only",
+        "arbitration procedures affecting the award contain a legal violation",
+    ],
     # representative_liability extra noise blocks added in v4.11
     # after vectorstore search revealed these score highest but are wrong articles
     "representative_liability_extra": [],  # placeholder — filters in main list above
@@ -726,6 +747,9 @@ class EgyptianLegalRAG:
                     source = doc.metadata.get("source", "")
                     if not self._is_source_allowed(source, clause_text):
                         continue
+                    # v4.13: Apply content filter for general category too
+                    if not self._is_content_allowed(doc.page_content, "general"):
+                        continue
                     key = (doc.metadata.get("source", ""), doc.page_content[:80])
                     if key not in seen_keys:
                         seen_keys.add(key)
@@ -887,7 +911,7 @@ def get_multiline_input(prompt: str = "") -> str:
 
 def main():
     print("="*80)
-    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.12")
+    print("EGYPTIAN LEGAL CONTRACT ANALYZER v4.14")
     print("Content filter v4.4 | v4.7 | CommercialLaw+CompanyLaw noise blocked from IP results")
     print("="*80 + "\n")
 
