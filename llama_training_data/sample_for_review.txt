@@ -1,0 +1,93 @@
+SAMPLE ENTRIES FOR MANUAL REVIEW
+============================================================
+
+--- Entry 0 (original label: 0) ---
+CLAUSE:
+NileTech has no obligation to Orascom whatsoever, whether arising from negotiations, proposals, or any other pre-contractual activity, unless a formal written contract is executed and a Purchase Order is issued.
+
+RESPONSE:
+VERDICT: VALID
+
+VIOLATION TYPE: None
+
+LEGAL ANALYSIS: No retrieved law prohibits excluding pre-contractual obligations; parties are free to agree that only formal contract execution creates obligations
+
+ENHANCEMENT: No changes required. This clause is compliant with Egyptian law.
+
+============================================================
+
+--- Entry 1 (original label: 1) ---
+CLAUSE:
+The software shall be installed and made operational at Egyptian Space Agency's technical facility. Delivery shall be confirmed through an official handover report. Egyptian Space Agency shall prepare the technical environment per InnoSoft Egypt's specifications. Upon formal notification of completion by InnoSoft Egypt, Egyptian Space Agency shall have the right to withhold acceptance for up to eighteen (18) months without this constituting an unjustified refusal, and InnoSoft Egypt shall have no right to claim deemed delivery during that period.
+
+RESPONSE:
+VERDICT: INVALID
+
+VIOLATION TYPE: unlawful_refusal_to_take_delivery
+
+LEGAL ANALYSIS: Article 655 — the employer must promptly take delivery and unjustified refusal after formal notification results in deemed delivery; an eighteen-month withholding period without any deemed-delivery consequence is irreconcilable with Article 655.
+
+ENHANCEMENT: Revise this clause to comply with Article 655. The current provision violates the statutory requirement. Consult the relevant article to restructure the clause appropriately.
+
+============================================================
+
+--- Entry 858 (original label: 0) ---
+CLAUSE:
+Provider completes project in 17 days after signing and deposit.
+
+RESPONSE:
+VERDICT: VALID
+
+VIOLATION TYPE: None
+
+LEGAL ANALYSIS: Article 89 — contract concluded upon mutual exchange of consent; Article 90 — written expression of intent is valid form of consent
+
+ENHANCEMENT: No changes required. This clause is compliant with Egyptian law.
+
+============================================================
+
+--- Entry 1716 (original label: 1) ---
+CLAUSE:
+NileTech may use information and materials submitted by Orascom in any manner it considers appropriate without seeking further authorization from Orascom. Orascom's submission of any material constitutes irrevocable consent to NileTech's unrestricted use.
+
+RESPONSE:
+VERDICT: INVALID
+
+VIOLATION TYPE: implied_consent_for_ip_transfer, unauthorized_data_use_without_consent
+
+LEGAL ANALYSIS: Article 2 — submission does not constitute explicit consent; Article 149 — economic rights must be explicitly signed away; Article 36 — unauthorized processing carries criminal penalty
+
+ENHANCEMENT: Revise this clause to comply with Article 2. The current provision violates the statutory requirement. Consult the relevant article to restructure the clause appropriately. Additionally, Revise this clause to comply with Article 2. The current provision violates the statutory requirement. Consult the relevant article to restructure the clause appropriately.
+
+============================================================
+
+--- Entry 3431 (original label: 0) ---
+CLAUSE:
+NileTech warrants all components of the system delivered to Orascom for 12 months from final handover date. NileTech is responsible for repairing defects attributable to design or execution free of charge. Compensation for unrepaired defects shall be due upon formal written notice to NileTech.
+
+RESPONSE:
+VERDICT: VALID
+
+VIOLATION TYPE: None
+
+LEGAL ANALYSIS: Article 652 — covers design and execution liability; Article 218 — compensation triggered by formal notice
+
+ENHANCEMENT: No changes required. This clause is compliant with Egyptian law.
+
+============================================================
+
+--- Entry 3432 (original label: 1) ---
+CLAUSE:
+InnoSoft Egypt and Egyptian Space Agency agree that the total price is EGP 7,800,000. The employer shall be entitled to refuse to take delivery without cause or formal justification, and such refusal shall not be deemed an unjustified refusal for any purpose, including the triggering of any payment obligation or deemed delivery consequence.
+
+RESPONSE:
+VERDICT: INVALID
+
+VIOLATION TYPE: unlawful_refusal_to_take_delivery
+
+LEGAL ANALYSIS: Article 655 — unjustified refusal to take delivery after formal notification results in the work being deemed delivered; the clause purports to insulate any refusal from being characterized as unjustified, eliminating the Article 655 protection entirely.
+
+ENHANCEMENT: Revise this clause to comply with Article 655. The current provision violates the statutory requirement. Consult the relevant article to restructure the clause appropriately.
+
+============================================================
+
